@@ -1,3 +1,4 @@
+
 namespace Calculator
 {
     partial class CalculatorForm
@@ -31,6 +32,7 @@ namespace Calculator
             tabControl = new TabControl();
             calculatorTab = new TabPage();
             generalSplitContainer = new SplitContainer();
+            txtDisplay = new TextBox();
             promptText = new Label();
             buttonClear = new Button();
             buttonEval = new Button();
@@ -52,7 +54,7 @@ namespace Calculator
             button8 = new Button();
             historyTab = new TabPage();
             panel1 = new Panel();
-            historyTextBox = new TextBox();
+            lstHistory = new ListBox();
             tabControl.SuspendLayout();
             calculatorTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)generalSplitContainer).BeginInit();
@@ -70,18 +72,20 @@ namespace Calculator
             tabControl.Dock = DockStyle.Fill;
             tabControl.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
             tabControl.Location = new Point(0, 0);
+            tabControl.Margin = new Padding(3, 4, 3, 4);
             tabControl.Name = "tabControl";
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(489, 450);
+            tabControl.Size = new Size(559, 600);
             tabControl.TabIndex = 0;
             // 
             // calculatorTab
             // 
             calculatorTab.Controls.Add(generalSplitContainer);
-            calculatorTab.Location = new Point(4, 24);
+            calculatorTab.Location = new Point(4, 29);
+            calculatorTab.Margin = new Padding(3, 4, 3, 4);
             calculatorTab.Name = "calculatorTab";
-            calculatorTab.Padding = new Padding(3);
-            calculatorTab.Size = new Size(481, 422);
+            calculatorTab.Padding = new Padding(3, 4, 3, 4);
+            calculatorTab.Size = new Size(551, 567);
             calculatorTab.TabIndex = 0;
             calculatorTab.Text = "Калькулятор";
             calculatorTab.UseVisualStyleBackColor = true;
@@ -90,14 +94,19 @@ namespace Calculator
             // 
             generalSplitContainer.Dock = DockStyle.Fill;
             generalSplitContainer.FixedPanel = FixedPanel.Panel2;
-            generalSplitContainer.Location = new Point(3, 3);
+            generalSplitContainer.IsSplitterFixed = true;
+            generalSplitContainer.Location = new Point(3, 4);
+            generalSplitContainer.Margin = new Padding(3, 4, 3, 4);
             generalSplitContainer.Name = "generalSplitContainer";
             generalSplitContainer.Orientation = Orientation.Horizontal;
             // 
             // generalSplitContainer.Panel1
             // 
+            generalSplitContainer.Panel1.BackColor = Color.WhiteSmoke;
+            generalSplitContainer.Panel1.Controls.Add(txtDisplay);
             generalSplitContainer.Panel1.Controls.Add(promptText);
-            generalSplitContainer.Panel1.Padding = new Padding(10, 15, 10, 10);
+            generalSplitContainer.Panel1.Padding = new Padding(11, 20, 10, 10);
+            generalSplitContainer.Panel1.Paint += generalSplitContainer_Panel1_Paint;
             // 
             // generalSplitContainer.Panel2
             // 
@@ -119,27 +128,42 @@ namespace Calculator
             generalSplitContainer.Panel2.Controls.Add(button7);
             generalSplitContainer.Panel2.Controls.Add(button9);
             generalSplitContainer.Panel2.Controls.Add(button8);
-            generalSplitContainer.Panel2.Padding = new Padding(10);
-            generalSplitContainer.Size = new Size(475, 416);
-            generalSplitContainer.SplitterDistance = 100;
+            generalSplitContainer.Panel2.Padding = new Padding(11, 13, 11, 13);
+            generalSplitContainer.Size = new Size(545, 559);
+            generalSplitContainer.SplitterDistance = 164;
+            generalSplitContainer.SplitterWidth = 1;
             generalSplitContainer.TabIndex = 0;
+            // 
+            // txtDisplay
+            // 
+            txtDisplay.BackColor = Color.WhiteSmoke;
+            txtDisplay.BorderStyle = BorderStyle.None;
+            txtDisplay.Dock = DockStyle.Bottom;
+            txtDisplay.Font = new Font("Segoe UI", 30F);
+            txtDisplay.ForeColor = Color.Black;
+            txtDisplay.Location = new Point(11, 87);
+            txtDisplay.Name = "txtDisplay";
+            txtDisplay.Size = new Size(524, 67);
+            txtDisplay.TabIndex = 1;
+            txtDisplay.TextAlign = HorizontalAlignment.Right;
             // 
             // promptText
             // 
             promptText.AutoSize = true;
             promptText.Dock = DockStyle.Fill;
             promptText.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            promptText.Location = new Point(10, 15);
+            promptText.Location = new Point(11, 20);
             promptText.Name = "promptText";
-            promptText.Size = new Size(0, 21);
+            promptText.Size = new Size(0, 28);
             promptText.TabIndex = 0;
             // 
             // buttonClear
             // 
             buttonClear.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            buttonClear.Location = new Point(286, 219);
+            buttonClear.Location = new Point(327, 292);
+            buttonClear.Margin = new Padding(3, 4, 3, 4);
             buttonClear.Name = "buttonClear";
-            buttonClear.Size = new Size(75, 59);
+            buttonClear.Size = new Size(86, 79);
             buttonClear.TabIndex = 17;
             buttonClear.Text = "C";
             buttonClear.UseVisualStyleBackColor = true;
@@ -147,9 +171,10 @@ namespace Calculator
             // buttonEval
             // 
             buttonEval.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            buttonEval.Location = new Point(367, 219);
+            buttonEval.Location = new Point(419, 292);
+            buttonEval.Margin = new Padding(3, 4, 3, 4);
             buttonEval.Name = "buttonEval";
-            buttonEval.Size = new Size(75, 59);
+            buttonEval.Size = new Size(86, 79);
             buttonEval.TabIndex = 16;
             buttonEval.Text = "=";
             buttonEval.UseVisualStyleBackColor = true;
@@ -157,9 +182,10 @@ namespace Calculator
             // buttonDiv
             // 
             buttonDiv.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            buttonDiv.Location = new Point(367, 89);
+            buttonDiv.Location = new Point(419, 119);
+            buttonDiv.Margin = new Padding(3, 4, 3, 4);
             buttonDiv.Name = "buttonDiv";
-            buttonDiv.Size = new Size(75, 59);
+            buttonDiv.Size = new Size(86, 79);
             buttonDiv.TabIndex = 15;
             buttonDiv.Text = "÷";
             buttonDiv.UseVisualStyleBackColor = true;
@@ -167,9 +193,10 @@ namespace Calculator
             // buttonMul
             // 
             buttonMul.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            buttonMul.Location = new Point(286, 89);
+            buttonMul.Location = new Point(327, 119);
+            buttonMul.Margin = new Padding(3, 4, 3, 4);
             buttonMul.Name = "buttonMul";
-            buttonMul.Size = new Size(75, 59);
+            buttonMul.Size = new Size(86, 79);
             buttonMul.TabIndex = 14;
             buttonMul.Text = "×";
             buttonMul.UseVisualStyleBackColor = true;
@@ -177,9 +204,10 @@ namespace Calculator
             // buttonMinus
             // 
             buttonMinus.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            buttonMinus.Location = new Point(367, 24);
+            buttonMinus.Location = new Point(419, 32);
+            buttonMinus.Margin = new Padding(3, 4, 3, 4);
             buttonMinus.Name = "buttonMinus";
-            buttonMinus.Size = new Size(75, 59);
+            buttonMinus.Size = new Size(86, 79);
             buttonMinus.TabIndex = 13;
             buttonMinus.Text = "-";
             buttonMinus.UseVisualStyleBackColor = true;
@@ -187,9 +215,10 @@ namespace Calculator
             // buttonPlus
             // 
             buttonPlus.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            buttonPlus.Location = new Point(286, 24);
+            buttonPlus.Location = new Point(327, 32);
+            buttonPlus.Margin = new Padding(3, 4, 3, 4);
             buttonPlus.Name = "buttonPlus";
-            buttonPlus.Size = new Size(75, 59);
+            buttonPlus.Size = new Size(86, 79);
             buttonPlus.TabIndex = 12;
             buttonPlus.Text = "+";
             buttonPlus.UseVisualStyleBackColor = true;
@@ -197,9 +226,10 @@ namespace Calculator
             // buttonClBracket
             // 
             buttonClBracket.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            buttonClBracket.Location = new Point(367, 154);
+            buttonClBracket.Location = new Point(419, 205);
+            buttonClBracket.Margin = new Padding(3, 4, 3, 4);
             buttonClBracket.Name = "buttonClBracket";
-            buttonClBracket.Size = new Size(75, 59);
+            buttonClBracket.Size = new Size(86, 79);
             buttonClBracket.TabIndex = 11;
             buttonClBracket.Text = ")";
             buttonClBracket.UseVisualStyleBackColor = true;
@@ -207,9 +237,10 @@ namespace Calculator
             // buttonOpBracket
             // 
             buttonOpBracket.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            buttonOpBracket.Location = new Point(286, 154);
+            buttonOpBracket.Location = new Point(327, 205);
+            buttonOpBracket.Margin = new Padding(3, 4, 3, 4);
             buttonOpBracket.Name = "buttonOpBracket";
-            buttonOpBracket.Size = new Size(75, 59);
+            buttonOpBracket.Size = new Size(86, 79);
             buttonOpBracket.TabIndex = 10;
             buttonOpBracket.Text = "(";
             buttonOpBracket.UseVisualStyleBackColor = true;
@@ -217,9 +248,10 @@ namespace Calculator
             // button0
             // 
             button0.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button0.Location = new Point(106, 219);
+            button0.Location = new Point(121, 292);
+            button0.Margin = new Padding(3, 4, 3, 4);
             button0.Name = "button0";
-            button0.Size = new Size(75, 59);
+            button0.Size = new Size(86, 79);
             button0.TabIndex = 9;
             button0.Text = "0";
             button0.UseVisualStyleBackColor = true;
@@ -227,9 +259,10 @@ namespace Calculator
             // button3
             // 
             button3.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button3.Location = new Point(187, 154);
+            button3.Location = new Point(214, 205);
+            button3.Margin = new Padding(3, 4, 3, 4);
             button3.Name = "button3";
-            button3.Size = new Size(75, 59);
+            button3.Size = new Size(86, 79);
             button3.TabIndex = 8;
             button3.Text = "3";
             button3.UseVisualStyleBackColor = true;
@@ -237,9 +270,10 @@ namespace Calculator
             // button2
             // 
             button2.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button2.Location = new Point(106, 154);
+            button2.Location = new Point(121, 205);
+            button2.Margin = new Padding(3, 4, 3, 4);
             button2.Name = "button2";
-            button2.Size = new Size(75, 59);
+            button2.Size = new Size(86, 79);
             button2.TabIndex = 7;
             button2.Text = "2";
             button2.UseVisualStyleBackColor = true;
@@ -247,9 +281,10 @@ namespace Calculator
             // button1
             // 
             button1.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button1.Location = new Point(25, 154);
+            button1.Location = new Point(29, 205);
+            button1.Margin = new Padding(3, 4, 3, 4);
             button1.Name = "button1";
-            button1.Size = new Size(75, 59);
+            button1.Size = new Size(86, 79);
             button1.TabIndex = 6;
             button1.Text = "1";
             button1.UseVisualStyleBackColor = true;
@@ -257,9 +292,10 @@ namespace Calculator
             // button6
             // 
             button6.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button6.Location = new Point(187, 89);
+            button6.Location = new Point(214, 119);
+            button6.Margin = new Padding(3, 4, 3, 4);
             button6.Name = "button6";
-            button6.Size = new Size(75, 59);
+            button6.Size = new Size(86, 79);
             button6.TabIndex = 5;
             button6.Text = "6";
             button6.UseVisualStyleBackColor = true;
@@ -267,9 +303,10 @@ namespace Calculator
             // button5
             // 
             button5.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button5.Location = new Point(106, 89);
+            button5.Location = new Point(121, 119);
+            button5.Margin = new Padding(3, 4, 3, 4);
             button5.Name = "button5";
-            button5.Size = new Size(75, 59);
+            button5.Size = new Size(86, 79);
             button5.TabIndex = 4;
             button5.Text = "5";
             button5.UseVisualStyleBackColor = true;
@@ -277,9 +314,10 @@ namespace Calculator
             // button4
             // 
             button4.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button4.Location = new Point(25, 89);
+            button4.Location = new Point(29, 119);
+            button4.Margin = new Padding(3, 4, 3, 4);
             button4.Name = "button4";
-            button4.Size = new Size(75, 59);
+            button4.Size = new Size(86, 79);
             button4.TabIndex = 3;
             button4.Text = "4";
             button4.UseVisualStyleBackColor = true;
@@ -287,9 +325,10 @@ namespace Calculator
             // button7
             // 
             button7.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button7.Location = new Point(25, 24);
+            button7.Location = new Point(29, 32);
+            button7.Margin = new Padding(3, 4, 3, 4);
             button7.Name = "button7";
-            button7.Size = new Size(75, 59);
+            button7.Size = new Size(86, 79);
             button7.TabIndex = 0;
             button7.Text = "7";
             button7.UseVisualStyleBackColor = true;
@@ -298,9 +337,10 @@ namespace Calculator
             // button9
             // 
             button9.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button9.Location = new Point(187, 24);
+            button9.Location = new Point(214, 32);
+            button9.Margin = new Padding(3, 4, 3, 4);
             button9.Name = "button9";
-            button9.Size = new Size(75, 59);
+            button9.Size = new Size(86, 79);
             button9.TabIndex = 2;
             button9.Text = "9";
             button9.UseVisualStyleBackColor = true;
@@ -308,9 +348,10 @@ namespace Calculator
             // button8
             // 
             button8.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button8.Location = new Point(106, 24);
+            button8.Location = new Point(121, 32);
+            button8.Margin = new Padding(3, 4, 3, 4);
             button8.Name = "button8";
-            button8.Size = new Size(75, 59);
+            button8.Size = new Size(86, 79);
             button8.TabIndex = 1;
             button8.Text = "8";
             button8.UseVisualStyleBackColor = true;
@@ -318,46 +359,41 @@ namespace Calculator
             // historyTab
             // 
             historyTab.Controls.Add(panel1);
-            historyTab.Location = new Point(4, 24);
+            historyTab.Location = new Point(4, 29);
+            historyTab.Margin = new Padding(3, 4, 3, 4);
             historyTab.Name = "historyTab";
-            historyTab.Padding = new Padding(3);
-            historyTab.Size = new Size(481, 422);
+            historyTab.Padding = new Padding(3, 4, 3, 4);
+            historyTab.Size = new Size(551, 567);
             historyTab.TabIndex = 1;
             historyTab.Text = "История";
             historyTab.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
-            panel1.Controls.Add(historyTextBox);
+            panel1.Controls.Add(lstHistory);
             panel1.Dock = DockStyle.Fill;
-            panel1.Location = new Point(3, 3);
+            panel1.Location = new Point(3, 4);
+            panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(475, 416);
+            panel1.Size = new Size(545, 559);
             panel1.TabIndex = 0;
             // 
-            // historyTextBox
+            // lstHistory
             // 
-            historyTextBox.AcceptsReturn = true;
-            historyTextBox.BackColor = Color.White;
-            historyTextBox.Dock = DockStyle.Fill;
-            historyTextBox.ForeColor = Color.Black;
-            historyTextBox.HideSelection = false;
-            historyTextBox.ImeMode = ImeMode.Disable;
-            historyTextBox.Location = new Point(0, 0);
-            historyTextBox.Multiline = true;
-            historyTextBox.Name = "historyTextBox";
-            historyTextBox.ReadOnly = true;
-            historyTextBox.ScrollBars = ScrollBars.Vertical;
-            historyTextBox.Size = new Size(475, 416);
-            historyTextBox.TabIndex = 0;
-            historyTextBox.TabStop = false;
+            lstHistory.Dock = DockStyle.Fill;
+            lstHistory.FormattingEnabled = true;
+            lstHistory.Location = new Point(0, 0);
+            lstHistory.Name = "lstHistory";
+            lstHistory.Size = new Size(545, 559);
+            lstHistory.TabIndex = 0;
             // 
             // CalculatorForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(489, 450);
+            ClientSize = new Size(559, 600);
             Controls.Add(tabControl);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "CalculatorForm";
             Text = "Калькулятор";
             Load += Form1_Load;
@@ -370,8 +406,12 @@ namespace Calculator
             generalSplitContainer.ResumeLayout(false);
             historyTab.ResumeLayout(false);
             panel1.ResumeLayout(false);
-            panel1.PerformLayout();
             ResumeLayout(false);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            
         }
 
         #endregion
@@ -379,7 +419,6 @@ namespace Calculator
         private TabControl tabControl;
         private TabPage historyTab;
         private Panel panel1;
-        private TextBox historyTextBox;
         private SplitContainer splitContainer1;
         private TabPage calculatorTab;
         private SplitContainer generalSplitContainer;
@@ -402,5 +441,7 @@ namespace Calculator
         private Button buttonDiv;
         private Button buttonMul;
         private Button buttonMinus;
+        private TextBox txtDisplay;
+        private ListBox lstHistory;
     }
 }
