@@ -4,41 +4,27 @@ using System.Globalization;
 
 namespace CalculatorLogic
 {
-    /// <summary>
-    /// Основной класс логики калькулятора.
-    /// Реализует вычисления через Обратную Польскую Запись (RPN).
-    /// </summary>
     public class Processor
     {
-        /// <summary>
-        /// Метод для вычисления математического выражения, записанного в виде строки.
-        /// </summary>
-        /// <param name="expression">Строка с выражением (например, "10 + 2 * (3 - 1)")</param>
-        /// <returns>Результат вычисления типа double</returns>
         public double Calculate(string expression)
         {
             try
             {
-                // 1. Преобразуем обычную строку в формат RPN (Обратная польская запись)
+                // 1. Преобразуем в RPN
                 string rpnExpression = GetReversePolishNotation(expression);
-
-                // 2. Считаем результат по RPN
+                // 2. Считаем результат
                 return CalculateRPN(rpnExpression);
             }
             catch (DivideByZeroException)
             {
-                // Пробрасываем ошибку выше, чтобы её поймать в Form1
                 throw new DivideByZeroException("Деление на ноль невозможно!");
             }
             catch (Exception ex)
             {
-                throw new Exception("Ошибка в выражении: " + ex.Message);
+                throw new Exception("Ошибка: " + ex.Message);
             }
         }
 
-        /// <summary>
-        /// Приватный метод: определяет приоритет операций.
-        /// </summary>
         private byte GetPriority(char s)
         {
             switch (s)
@@ -53,31 +39,49 @@ namespace CalculatorLogic
             }
         }
 
-        /// <summary>
-        /// Алгоритм "Сортировочная станция"
-        /// Преобразует инфиксную запись (2 + 2) в постфиксную (2 2 +).
-        /// </summary>
         private string GetReversePolishNotation(string input)
         {
             string output = string.Empty;
             Stack<char> operStack = new Stack<char>();
 
+            // Удаляем все пробелы, чтобы упростить разбор унарного минуса
+            input = input.Replace(" ", "");
+
             for (int i = 0; i < input.Length; i++)
             {
-                // Пропускаем пробелы
-                if (IsSpace(input[i])) continue;
-
-                // Если цифра или точка - читаем число целиком
-                if (Char.IsDigit(input[i]) || input[i] == ',' || input[i] == '.')
+                // Проверяем, является ли текущий символ минусом, который обозначает отрицательное число (унарный минус)
+                // Это так, если:
+                // 1. Минус стоит в самом начале строки (i == 0)
+                // 2. Или перед минусом стоит открывающая скобка '('
+                // 3. Или перед минусом стоит любой другой оператор (кроме закрывающей скобки)
+                bool isUnaryMinus = false;
+                if (input[i] == '-')
                 {
-                    while (!IsSpace(input[i]) && !IsOperator(input[i]))
+                    if (i == 0) isUnaryMinus = true;
+                    else if (input[i - 1] == '(') isUnaryMinus = true;
+                    else if (IsOperator(input[i - 1]) && input[i - 1] != ')') isUnaryMinus = true;
+                }
+
+                // Если это цифра, или разделитель, или мы определили, что это унарный минус -> читаем как число
+                if (Char.IsDigit(input[i]) || input[i] == ',' || input[i] == '.' || isUnaryMinus)
+                {
+                    // Читаем число целиком
+                    // Если это унарный минус, добавляем его и идем к следующему символу (цифре)
+                    if (isUnaryMinus)
                     {
                         output += input[i];
                         i++;
-                        if (i == input.Length) break;
                     }
+
+                    // Читаем оставшиеся цифры числа
+                    while (i < input.Length && (Char.IsDigit(input[i]) || input[i] == ',' || input[i] == '.'))
+                    {
+                        output += input[i];
+                        i++;
+                    }
+
                     output += " ";
-                    i--;
+                    i--; // Возвращаемся на шаг назад, так как цикл for сам сделает i++
                 }
                 // Если оператор или скобка
                 else if (IsOperator(input[i]))
@@ -88,28 +92,26 @@ namespace CalculatorLogic
                     }
                     else if (input[i] == ')')
                     {
+                        if (operStack.Count == 0) throw new Exception("Нарушен баланс скобок");
                         char s = operStack.Pop();
                         while (s != '(')
                         {
                             output += s.ToString() + ' ';
+                            if (operStack.Count == 0) throw new Exception("Нарушен баланс скобок");
                             s = operStack.Pop();
                         }
                     }
-                    else // Обычные операторы
+                    else // Обычные операторы (+ - * /)
                     {
-                        if (operStack.Count > 0)
+                        while (operStack.Count > 0 && GetPriority(input[i]) <= GetPriority(operStack.Peek()))
                         {
-                            if (GetPriority(input[i]) <= GetPriority(operStack.Peek()))
-                            {
-                                output += operStack.Pop().ToString() + " ";
-                            }
+                            output += operStack.Pop().ToString() + " ";
                         }
-                        operStack.Push(char.Parse(input[i].ToString()));
+                        operStack.Push(input[i]);
                     }
                 }
             }
 
-            // Выталкиваем оставшиеся операторы
             while (operStack.Count > 0)
             {
                 output += operStack.Pop() + " ";
@@ -118,29 +120,28 @@ namespace CalculatorLogic
             return output;
         }
 
-        /// <summary>
-        /// Вычисление результата на основе RPN строки.
-        /// </summary>
-        private double CalculateRPN(string input) 
+        private double CalculateRPN(string input)
         {
             double result = 0;
             Stack<double> temp = new Stack<double>();
 
-            // Заменяем точки на запятые (или наоборот, зависит от настроек системы), 
-            // чтобы double.Parse не упал
-            input = input.Replace('.', ',');
-
+            // Разбиваем строку по пробелам
             string[] strArr = input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string s in strArr)
             {
-                if (double.TryParse(s, out double num))
+                // Пробуем распарсить число. 
+                // Используем InvariantCulture, чтобы '5.5' читалось корректно вне зависимости от настроек ПК.
+                // Replace(',', '.') нужен на случай, если пользователь ввел запятую.
+                string normalString = s.Replace(',', '.');
+
+                if (double.TryParse(normalString, NumberStyles.Any, CultureInfo.InvariantCulture, out double num))
                 {
                     temp.Push(num);
                 }
                 else
                 {
-                    // Если стек пуст, значит операторов больше чем чисел
+                    // Если это не число, значит оператор. Для бинарного оператора нужно 2 числа в стеке.
                     if (temp.Count < 2) throw new Exception("Неверное количество аргументов");
 
                     double num2 = temp.Pop();
@@ -155,6 +156,8 @@ namespace CalculatorLogic
                             if (num2 == 0) throw new DivideByZeroException();
                             result = num1 / num2;
                             break;
+                        default:
+                            throw new Exception("Неизвестная операция: " + s);
                     }
                     temp.Push(result);
                 }
@@ -166,8 +169,6 @@ namespace CalculatorLogic
                 throw new Exception("Пустой стек вычислений");
         }
 
-        // Вспомогательные методы
-        private bool IsSpace(char c) => c == ' ';
         private bool IsOperator(char c) => "+-/*()".IndexOf(c) != -1;
     }
 }
